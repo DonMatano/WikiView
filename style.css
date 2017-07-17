@@ -1,0 +1,44 @@
+body{
+	background-image: url("http://www.menushop.co.uk/images/products/huge/rihodarkoakhardwood.jpg");
+}
+p{
+	width: 80%;
+}
+#theScroll{
+	background-image: url("http://pic1.sc.chinaz.com/files/pic/pic7/xpic1761.jpg");
+	background-size: cover;
+	margin-top: 8%;
+	margin-bottom: 8%;
+	margin-left: 8%;
+	margin-right: 8%;
+	min-height:500px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Eagle Lake', cursive;
+    font-size: 20px;
+    cursor: url("https://cdn0.iconfinder.com/data/icons/glyphpack/50/search-32.png"), auto;
+}
+
+.list-group{
+	border-color: black;
+	box-shadow: 5px 2px 2px black;
+	margin: 5%;
+	color: black;
+
+}
+
+.list-group-item{
+	background-color: #F8ECC2;
+}
+
+ a .list-group-item :hover{
+	 background-color: yellow;
+	 
+ }
+
+.list-group-item-text{
+	font-size: 23px;
+	color: black;
+	font-family: 'Ruluko', sans-serif;
+}
