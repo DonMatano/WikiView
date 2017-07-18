@@ -25,11 +25,9 @@ $(document).ready(function() {
 
     $("#learnMoreLink").on("click", function(event) {
         event.stopPropagation(); //Stop the click event of theScroll from happening
+        showMoreInfoModal();
     });
 
-    $(".list-group-item").on("click", function(event) {
-        event.stopPropagation();
-    });
 
 });
 
@@ -53,56 +51,65 @@ function showSearchModal() {
     });
 }
 
-function search(topic) {
-    $("p").fadeOut(1200, function() {
-        html = "";
-        html += "<div class='list-group'>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "<a href='#' class='list-group-item'>";
-        html += "<h4 class='list-group-item-heading'> Heading 1</h4>";
-        html += "<p class='list-group-item-text'>Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>";
-        html += "</a>";
-        html += "</div>";
-
-        $("#theScroll").fadeIn(2000).html(html);
+function showMoreInfoModal() {
+    var message = "This is a magical scroll. It know's what you want. If you just <b>click or tap</b> on it only once it will ask you what you want.";
+    message += "If you <b>double tap or double click</b> it, will show you any wikipedia it feels like. Enjoy the magical scroll.";
+    bootbox.alert({
+        message: message,
+        size: "large",
+        backdrop: true
     });
 }
 
+function search(topic) {
+
+    var url = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=";
+    url += topic;
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: {},
+        dataType: "jsonp",
+        success: function(response) {
+            console.log(response);
+            showResultList(response.query.pages);
+        },
+        error: function(err) {
+            alert(err.toString());
+        },
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("Api-User-Agent", "Mwakimamatano@gmail.com");
+        }
+    });
+
+
+}
+
+function showResultList(pages) {
+    var searchURL = "http://en.wikipedia.org/?curid=";
+    $("p").fadeOut(2000).remove();
+    var html = "";
+    // html += "<h2 class='text-center' id='topInstruction'>Click/tap here to make a new search or double click/tap to make a random search.</h2>";
+    html += "<div class='list-group' >";
+    for (var singlePage in pages) {
+        if (pages.hasOwnProperty(singlePage)) {
+            console.log(pages[singlePage]);
+            html += "<a href='" + searchURL + pages[singlePage].pageid + "' target='_blank' class='list-group-item'>";
+            html += "<h4 class='list-group-item-heading'> " + pages[singlePage].title + "</h4>";
+            html += "<p class='list-group-item-text'>" + pages[singlePage].extract + "</p></a>";
+        }
+    }
+
+    html += "</div>";
+
+    $("#theScroll").fadeIn(2000).html(html);
+
+    $(".list-group").on("click", function(event) {
+        event.stopPropagation();
+    });
+
+}
 
 function randomSearch() {
     RANDOM_URL = "https://en.wikipedia.org/wiki/Special:Random";
